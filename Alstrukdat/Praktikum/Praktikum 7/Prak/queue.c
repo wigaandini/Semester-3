@@ -22,7 +22,7 @@ boolean isFull(Queue q){
     if(IDX_TAIL(q) > IDX_HEAD(q)){
         return (IDX_HEAD(q) == 0 && IDX_TAIL(q) == CAPACITY-1);
     }
-    else{
+    else{ 
         return IDX_TAIL(q) == IDX_HEAD(q) - 1;
     }
 }
