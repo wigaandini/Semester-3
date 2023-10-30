@@ -125,15 +125,17 @@ Address searchPrec(List L, ElType X);
 /* Search dengan spesifikasi seperti ini menghindari */
 /* traversal ulang jika setelah Search akan dilakukan operasi lain */
 
-/*** Prekondisi untuk Max/Min : List tidak kosong ***/
-ElType max(List l);
+/*** Prekondisi untuk Max/Min/Rata-rata : List tidak kosong ***/
+ElType maxValue(List l);
 /* Mengirimkan nilai info(P) yang maksimum */
 Address adrMax(List l);
 /* Mengirimkan address P, dengan info(P) yang bernilai maksimum */
-ElType min(List l);
+ElType minValue(List l);
 /* Mengirimkan nilai info(P) yang minimum */
 Address adrMin(List l);
 /* Mengirimkan address P, dengan info(P) yang bernilai minimum */
+float average(List L);
+/* Mengirimkan nilai rata-rata info(P) */
 
 /***************** FUNGSI dan PROSEDUR TAMBAHAN **************/
 void deleteAll(List *l);
@@ -149,34 +151,4 @@ void inverseList(List *l);
 /* F.S. elemen list dibalik : */
 /* Elemen terakhir menjadi elemen pertama, dan seterusnya. */
 /* Membalik elemen list, tanpa melakukan alokasi/dealokasi. */
-
-void splitList(List *l1, List *l2, List l);
-/* I.S. l mungkin kosong */
-/* F.S. Berdasarkan L, dibentuk dua buah list l1 dan l2 */
-/* L tidak berubah: untuk membentuk l1 dan l2 harus alokasi */
-/* l1 berisi separuh elemen L dan l2 berisi sisa elemen L */
-/* Jika elemen L ganjil, maka separuh adalah length(L) div 2 */
-
-float average(List l);
-/* Mengirimkan nilai rata-rata info(P) */
-
-List fInverseList(List l);
-/* Mengirimkan list baru, hasil invers dari L */
-/* dengan menyalin semua elemn list. Alokasi mungkin gagal. */
-/* Jika alokasi gagal, hasilnya list kosong */
-/* dan semua elemen yang terlanjur di-alokasi, harus didealokasi */
-
-List fCopyList(List l);
-/* Mengirimkan list yang merupakan salinan L */
-/* dengan melakukan alokasi. */
-/* Jika ada alokasi gagal, hasilnya list kosong dan */
-/* semua elemen yang terlanjur di-alokasi, harus didealokasi */
-
-void cpAllocList(List lIn, List *lOut);
-/* I.S. lIn sembarang. */
-/* F.S. Jika semua alokasi berhasil,maka lOut berisi hasil copy lIn */
-/* Jika ada alokasi yang gagal, maka lOut=Nil dan semua elemen yang terlanjur dialokasi, didealokasi */
-/* dengan melakukan alokasi elemen. */
-/* lOut adalah list kosong jika ada alokasi elemen yang gagal */
-
 #endif

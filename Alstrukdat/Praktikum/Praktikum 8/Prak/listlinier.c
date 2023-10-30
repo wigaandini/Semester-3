@@ -254,12 +254,11 @@ List concat(List l1, List l2){
     List lnew;
     CreateList(&lnew);
     p = FIRST(l1);
-    // p = l1;
     while (p != NULL){
         insertLast(&lnew, INFO(p));
         p = NEXT(p);
     }
-    p = FIRST(l2) ;
+    p = FIRST(l2);
     while (p != NULL){
         insertLast(&lnew, INFO(p));
         p = NEXT(p);
@@ -275,47 +274,35 @@ List concat(List l1, List l2){
 /****************** PENCARIAN SEBUAH ELEMEN LIST ******************/
 boolean fSearch(List L, Address P){
     boolean found = false;
-    Address src = FIRST(L);
-    while (src != NULL && !found){
+    Address src = L;
+    while (NEXT(src) != NULL && !found){
         if (src == P){
             found = true;
         }
-        else{
-            src = NEXT(src);
-        }
+        src = NEXT(src);
     }
     return found;
-
-    // Address now;
-    // boolean flag = false;
-    // now = L;
-    // while(now->next != NULL && !flag){
-    //     if(now==P){
-    //         flag = true;
-    //     }
-    //     now = now->next;
-    // }
-    // return flag;
 }
 /* Mencari apakah ada elemen list yang beralamat P */
 /* Mengirimkan true jika ada, false jika tidak ada */
+
 Address searchPrec(List L, ElType X){
-    Address p = FIRST(L);
-    // Address p = L;
+    Address p = L;
     Address prev;
 
     if(isEmpty(L) || length(L) == 1){
         return NULL;
     }
+
     while (INFO(p) != X && p != NULL){
         prev = p;
         p = NEXT(p);
     }
-    if (p == NULL){
-        return NULL;
+    if (p != NULL){
+        return prev;
     }
     else{
-        return prev;
+        return NULL;
     }
 }
 /* Mengirimkan address elemen sebelum elemen yang nilainya=X */
@@ -326,14 +313,13 @@ Address searchPrec(List L, ElType X){
 /* Search dengan spesifikasi seperti ini menghindari */
 /* traversal ulang jika setelah Search akan dilakukan operasi lain */
 
-/*** Prekondisi untuk Max/Min : List tidak kosong ***/
-ElType max(List l){
+/*** Prekondisi untuk Max/Min/Rata-rata : List tidak kosong ***/
+ElType maxValue(List l){
     ElType maks;
-    Address p = FIRST(l);
-    // Address p = l;
+    Address p = l;
     maks = INFO(p);
     while (p != NULL){
-        if(INFO(p) >= maks){
+        if(INFO(p) > maks){
             maks = INFO(p);
         }
         p = NEXT(p);
@@ -341,23 +327,23 @@ ElType max(List l){
     return maks;
 }
 /* Mengirimkan nilai info(P) yang maksimum */
+
 Address adrMax(List l){
-    ElType maks = max(l);
-    Address p = FIRST(l);
-    // Address p = l;
+    ElType maks = maxValue(l);
+    Address p = l;
     while (p != NULL && INFO(p) != maks){
         p = NEXT(p);
     }
     return p;
 }
 /* Mengirimkan address P, dengan info(P) yang bernilai maksimum */
-ElType min(List l){
+
+ElType minValue(List l){
     ElType minm;
-    Address p = FIRST(l);
-    // Address p = l;
+    Address p = l;
     minm = INFO(p);
     while (p != NULL){
-        if(INFO(p) <= minm){
+        if(INFO(p) < minm){
             minm = INFO(p);
         }
         p = NEXT(p);
@@ -365,16 +351,27 @@ ElType min(List l){
     return minm;
 }
 /* Mengirimkan nilai info(P) yang minimum */
+
 Address adrMin(List l){
-    ElType minm = min(l);
-    Address p = FIRST(l);
-    // Address p = l;
+    ElType minm = minValue(l);
+    Address p = l;
     while (p != NULL && INFO(p) != minm){
         p = NEXT(p);
     }
     return p;
 }
 /* Mengirimkan address P, dengan info(P) yang bernilai minimum */
+
+float average(List L){
+    float sum = 0;
+    Address p = FIRST(L);
+    while(NEXT(p) != NULL){
+        sum += INFO(p);
+    }
+    sum += INFO(p);
+    return (sum/(float)(length(L)));
+}
+/* Mengirimkan nilai rata-rata info(P) */
 
 /***************** FUNGSI dan PROSEDUR TAMBAHAN **************/
 void deleteAll(List *l){
@@ -389,9 +386,8 @@ void deleteAll(List *l){
 /* Delete semua elemen list dan alamat elemen di-dealokasi */
 
 void copyList(List *l1, List *l2){
-    *l2 = *l1;
-    // CreateList(l2);
-    // FIRST(*l2) = FIRST(*l1);
+    CreateList(l2);
+    FIRST(*l2) = FIRST(*l1);
 }
 /* I.S. L1 sembarang. F.S. L2=L1 */
 /* L1 dan L2 "menunjuk" kepada list yang sama.*/
@@ -399,23 +395,23 @@ void copyList(List *l1, List *l2){
 
 void inverseList(List *l){
     if(!isEmpty(*l)){
-        int n = length(*l);
-        int i;
-        Address p = *l;
-        Address prev;
-        Address last;
-        while(NEXT(p)!= NULL){
+        int i, len = length(*l);
+        Address p = FIRST(*l), prev = NULL, last = NULL;
+        
+        while(NEXT(p) != NULL){
             p = NEXT(p);
         }
         last = p;
-        while (p != *l){
-            prev = *l;
+
+        while(p != FIRST(*l)){
+            prev = FIRST(*l);
             while(NEXT(prev) != p){
                 prev = NEXT(prev);
             }
             NEXT(p) = prev;
             p = prev;
         }
+
         NEXT(p) = NULL;
         *l = last;
     }
@@ -424,99 +420,3 @@ void inverseList(List *l){
 /* F.S. elemen list dibalik : */
 /* Elemen terakhir menjadi elemen pertama, dan seterusnya. */
 /* Membalik elemen list, tanpa melakukan alokasi/dealokasi. */
-
-void splitList(List *l1, List *l2, List l){
-    CreateList(l1);
-    CreateList(l2);
-    int half = length(l) / 2;
-    int cnt = 0;
-    Address p = l;
-    while(p != NULL){
-        if(cnt < half){
-            insertLast(l1, INFO(p));
-        }
-        else{
-            insertLast(l2, INFO(p));
-        }
-        cnt++;
-        p = NEXT(p);
-    }
-}
-/* I.S. l mungkin kosong */
-/* F.S. Berdasarkan L, dibentuk dua buah list l1 dan l2 */
-/* L tidak berubah: untuk membentuk l1 dan l2 harus alokasi */
-/* l1 berisi separuh elemen L dan l2 berisi sisa elemen L */
-/* Jika elemen L ganjil, maka separuh adalah length(L) div 2 */
-
-float average(List l){
-    int count = 0;
-    ElType sum = 0;
-    Address p = FIRST(l);
-    while(p != NULL){
-        sum += INFO(p);
-        count ++;
-    }
-    return ((float)sum/count);
-}
-/* Mengirimkan nilai rata-rata info(P) */
-
-List fInverseList(List l){
-    List lnew;
-    CreateList(&lnew);
-    cpAllocList(l, &lnew);
-    inverseList(&lnew);
-    return lnew;
-}
-/* Mengirimkan list baru, hasil invers dari L */
-/* dengan menyalin semua elemn list. Alokasi mungkin gagal. */
-/* Jika alokasi gagal, hasilnya list kosong */
-/* dan semua elemen yang terlanjur di-alokasi, harus didealokasi */
-
-List fCopyList(List l){
-    List lnew;
-    Address p, prec, pnew;
-    boolean berhasil;
-
-    /* ALGORITMA */
-    lnew = (Address) malloc(sizeof(Node));
-    
-    if (lnew != NULL) {
-        CreateList(&lnew);
-
-        berhasil = true;
-
-        p = FIRST(l);
-        prec = NULL;
-        while (p != NULL && berhasil) {
-            pnew = newNode(INFO(p));
-            if (pnew != NULL) {
-                if (prec == NULL) {
-                    FIRST(lnew) = pnew;
-                } else {
-                    NEXT(prec) = pnew;
-                }
-                p = NEXT(p);
-            } else {
-                deleteAll(&lnew);
-                berhasil = false;
-            }
-            prec = pnew;
-        }
-    }
-
-    return lnew;
-}
-/* Mengirimkan list yang merupakan salinan L */
-/* dengan melakukan alokasi. */
-/* Jika ada alokasi gagal, hasilnya list kosong dan */
-/* semua elemen yang terlanjur di-alokasi, harus didealokasi */
-
-void cpAllocList(List lIn, List *lOut){
-    CreateList(lOut);
-    *lOut = fCopyList(lIn);
-}
-/* I.S. lIn sembarang. */
-/* F.S. Jika semua alokasi berhasil,maka lOut berisi hasil copy lIn */
-/* Jika ada alokasi yang gagal, maka lOut=Nil dan semua elemen yang terlanjur dialokasi, didealokasi */
-/* dengan melakukan alokasi elemen. */
-/* lOut adalah list kosong jika ada alokasi elemen yang gagal */
