@@ -1,0 +1,150 @@
+/* Nama : Erdianti Wiga Putri Andini */
+/* NIM : 13522053 */
+/* Kelas : K-01 */
+
+/* ******************************************************************** */
+                /* BAGIAN I : Fakta, Rule, dan Query */
+/* ******************************************************************** */
+
+a. Suami dari margot
+Query :
+    | ?- pria(Suami), menikah(margot,Suami).
+    
+    Suami = henri ? 
+    
+    yes
+
+
+b. Kakek buyut dan nenek buyut dari Daniel
+Query :
+   | ?- nenek(_Nenek,daniel), anak(_Nenek,KakekBuyut), pria(KakekBuyut), menikah(KakekBuyut,NenekBuyut).
+
+    KakekBuyut = athif
+    NenekBuyut = joli ? 
+
+    yes
+
+
+c. Paman dari orang tua rupert
+Query :
+    | ?- anak(rupert,_Ortu), keponakan(_Ortu,Paman), pria(Paman).
+
+    Paman = michael ? 
+
+    yes
+
+
+d. Orang yang memiliki lebih dari satu istri
+Query :
+    | ?- menikah(X,_Y), menikah(X,_Z), _Y \== _Z.
+
+    X = fio ? ;
+
+    X = fio ? 
+
+    yes
+
+
+e. Saudara tiri tertua dari Emma
+Query :
+    | ?- saudaratiri(emma,STiri), usia(emma,_UsiaEmma), \+ (usia(STiri,_UsiaSTiri), _UsiaSTiri =< _UsiaEmma).
+
+    STiri = daniel ? 
+
+    yes
+
+
+f. Orang tua yang memiliki tepat satu anak
+Query :
+    | ?- menikah(_X,Ortu), \+ (anak(_U,Ortu), anak(_Z,Ortu), _U \== _Z).
+
+    Ortu = elysia ? ;
+
+    Ortu = dillon ? ;
+
+    Ortu = jeni ? 
+
+    yes
+
+
+g. Pria yang memiliki mertua berusia lebih dari 50 tahun
+Query :
+    | ?- pria(Goal), mertua(Mertua,Goal),  usia(Mertua,_UsiaMertua), _UsiaMertua > 50.
+
+    Goal = henri
+    Mertua = athif ? ;
+
+    Goal = henri
+    Mertua = joli ? 
+
+    yes
+
+
+h. Orang yatim piatu dengan usia termuda
+Query :
+    | ?- yatimpiatu(X), usia(X,_Z), \+ (yatimpiatu(_Y), usia(_Y,_U), _U < _Z).
+
+    X = fio ? 
+
+    yes
+
+
+i. Orang diatas 25 tahun yang statusnya menikah dengan orang yang memiliki saudara lebih dari 1 orang
+Query :
+    | ?- menikah(X,_Y), usia(X,_U), _U > 25, saudara(_W,_Y), saudara(_T,_Y), _W \== _T.
+
+    X = fio ? ;
+
+    X = fio ? ;
+
+    X = fio ? ;
+
+    X = fio ? ;
+
+    X = fio ? ;
+
+    X = fio ? ;
+
+    X = fio ? ;
+
+    X = fio ? 
+
+    yes
+
+j. Seluruh keturunan Athif yang memiliki tepat 2 keponakan
+Query :
+    | ?- keturunan(X,athif), keponakan(_Y,X), keponakan(_W,X), _Y \== _W, \+ (keponakan(_U,X), _U \== _Y, _U \== _W).
+
+    X = robert ? ;
+
+    X = robert ? ;
+
+    X = robert ? ;
+
+    X = robert ? ;
+
+    X = robert ? ;
+
+    X = robert ? ;
+
+    X = robert ? ;
+
+    X = robert ? ;
+
+    X = bagas ? ;
+
+    X = bagas ? ;
+
+    X = bagas ? ;
+
+    X = bagas ? ;
+
+    X = bagas ? ;
+
+    X = bagas ? ;
+
+    X = bagas ? ;
+
+    X = bagas ? 
+
+    yes
