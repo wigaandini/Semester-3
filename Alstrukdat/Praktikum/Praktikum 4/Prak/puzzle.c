@@ -1,60 +1,64 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include "boolean.h"
 #include "matrix.h"
 
-boolean exist(Matrix m, Matrix subm){
-    int startRow=0, startCol=0;
-    boolean ex;
-    if((ROW_EFF(subm) > ROW_EFF(m)) || (COL_EFF(subm) > COL_EFF(m))){
-        return false;
-    }
-    else{
-        while(startRow<ROW_EFF(m)-ROW_EFF(subm)+1 && ex){
-            while(startCol<COL_EFF(m)-COL_EFF(subm)+1 && ex){
-                if (ELMT(m, startRow, startCol) != ELMT(subm, startRow, startCol)){
-                    ex = false;
+void solvePuzzle(Matrix puzzle, int K, Matrix *pieces) {
+    boolean solved = true;
+
+    for (int k = 0; k < K; k++) {
+        boolean found = false;
+        for (int i = 0; i <= getLastIdxRow(puzzle) - getLastIdxRow(pieces[k]); i++) {
+            for (int j = 0; j <= getLastIdxCol(puzzle) - getLastIdxCol(pieces[k]); j++) {
+                Matrix subPuzzle;
+                createMatrix(getLastIdxRow(pieces[k]) + 1, getLastIdxCol(pieces[k]) + 1, &subPuzzle);
+
+                for (int x = 0; x <= getLastIdxRow(pieces[k]); x++) {
+                    for (int y = 0; y <= getLastIdxCol(pieces[k]); y++) {
+                        ELMT(subPuzzle, x, y) = ELMT(puzzle, i + x, j + y);
+                    }
                 }
-                else{
-                    ex = true;
-                    startCol ++;
+
+                if (isMatrixEqual(subPuzzle, pieces[k])) {
+                    found = true;
+                    break;
                 }
             }
-            startRow++;
+            if (found) {
+                break;
+            }
         }
-        return ex;
+        if (!found) {
+            solved = false;
+            break;
+        }
+    }
+
+    if (solved) {
+        printf("Puzzle dapat diselesaikan.\n");
+    } else {
+        printf("Puzzle tidak dapat diselesaikan.\n");
     }
 }
 
-int main(){
-    int n, m, k, a, b;
-    IdxType i=0;
-    Matrix m1, sub;
-    boolean bisa = true;
+int main() {
+    int n, m, K;
+    scanf("%d %d", &n, &m);
 
-    scanf("%d", &n);
-    scanf("%d", &m);
-    readMatrix(&m1, n, m);
-    scanf("%d", &k);
-    scanf("%d", &a);
-    scanf("%d", &b);
+    Matrix puzzle;
+    readMatrix(&puzzle, n, m);
 
-    for(i=0; i<k; i++){
-        readMatrix(&sub, a, b);
-        if(exist(m1, sub)){
-            bisa = true;
-        }
-        else{
-            bisa = false;
-        }
+    scanf("%d", &K);
+
+    Matrix pieces[K];
+    for (int i = 0; i < K; i++) {
+        int a, b;
+        scanf("%d %d", &a, &b);
+        createMatrix(a, b, &pieces[i]);
+        readMatrix(&pieces[i], a, b);
     }
 
-    if(bisa){
-        printf("Puzzle dapat diselesaikan.\n");
-    }
-    else{
-        printf("Puzzle tidak dapat diselesaikan.\n");
-    }
+    solvePuzzle(puzzle, K, pieces);
 
     return 0;
 }
