@@ -1,36 +1,37 @@
 #include <stdio.h>
-#include "charmachine.h"
 #include "wordmachine.h"
+#include "charmachine.h"
 
+// Prints word from Mesin Kata
 void printWord(Word word) {
-    int i;
-    for (i = 0; i < word.Length; i++) {
-        printf("%c", word.TabWord[i]);
-    }
+   int i;
+   for (i = 0; i < word.Length; i++) {
+      printf("%c", word.TabWord[i]);
+   }
 }
 
 int main() {
-    STARTWORD();
-
-    int charCount = 0;
-
-    while (!EndWord) {
-        int i = 0;
-        while (i < currentWord.Length) {
-            // printf("%c", currentWord.TabWord[i]);
-            charCount++;
-            i++;
-        }
-
-        if (!EndWord) {
-            // printf(" ");
-            charCount++;
-        }
-
-        ADVWORD();
+    Word word;
+    int i = 0;
+    
+    START();
+    IgnoreBlanks();
+    while (currentChar != MARK) {
+        word.TabWord[i] = currentChar;
+        ADV();
+        i++;
+    }
+    
+    if (i > NMax) {
+        word.Length = NMax;
+    }
+    else {
+        word.Length = i;
     }
 
-    printf("%d\n", charCount-1);
+    int count = word.Length;
+    printWord(word);
+    printf("\n%d\n", count);
 
     return 0;
 }
