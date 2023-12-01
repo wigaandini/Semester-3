@@ -8,25 +8,23 @@
 #include "boolean.h"
 
 void splitList(List source, List* front, List* back){
-    CreateList(front);
-    CreateList(back);
-    int half;
-    if (length(source)%2 == 0){
-        half = length(source)/2;
+    int len = length(source);
+    int frontPart;
+    if(len % 2 == 0){
+        frontPart = len / 2;
     }
     else{
-        half = (length(source)/2) + 1;
+        frontPart = ((len / 2) - 1);
     }
-    int count = 0;
-    Address p = source;
-    while(p != NULL){
-        if(count < half){
+
+    List p = source;
+    int i;
+    for (i = 0; i < len; i++) {
+        if (i <= frontPart) {
             insertLast(front, INFO(p));
-        }
-        else{
+        } else {
             insertLast(back, INFO(p));
         }
-        count++;
         p = NEXT(p);
     }
 }
@@ -38,28 +36,40 @@ void splitList(List source, List* front, List* back){
 */
 
 List merge(List a, List b){
-    if(isEmpty(a)){
+    List result;
+    CreateList(&result);
+
+    if (a == NULL){
         return b;
-    }
-    else if(isEmpty(b)){
+    } 
+    else if (b == NULL){
         return a;
-    }
-    else{
-        Address pa = FIRST(a);
-        Address pb = FIRST(b);
-        List new;
-        CreateList(&new);
-        while(pa != NULL){
-            if(INFO(pa) <= INFO(pb)){
-                insertLast(&new, INFO(pa));
-                pa = NEXT(pa);
-            }
-            else if(INFO(pa) > INFO(pb)){
-                insertLast(&new, INFO(pb));
-                pb = NEXT(pb);
-            }
+    } 
+    else {
+        List temp1 = a;
+        List temp2 = b;
+        ElType val;
+
+        while ((temp1 != NULL) && (temp2 != NULL)) {
+            if (INFO(temp1) <= INFO(temp2)) 
+                deleteFirst(&temp1, &val);
+            else 
+                deleteFirst(&temp2, &val);
+            
+            insertLast(&result, val);
         }
-        return new;
+
+        while (temp1 != NULL) {
+            deleteFirst(&temp1, &val);
+            insertLast(&result, val);
+        }
+
+        while (temp2 != NULL) {
+            deleteFirst(&temp2, &val);
+            insertLast(&result, val);
+        }
+
+        return result;
     }
 }
 /* Fungsi untuk melakukan merge sort list a dan b secara rekursif.
@@ -71,20 +81,20 @@ List merge(List a, List b){
 */
 
 void mergeSort(List* list){
-    displayList(list);
+    displayList(*list); 
+    printf("\n");
+    if (length(*list) > 1) {
+        List front; 
+        List back; 
+        CreateList(&front);
+        CreateList(&back);
 
-    List a, b, new;
-    CreateList(&a);
-    CreateList(&b);
-    CreateList(&new);
+        splitList(*list, &front, &back);
+        mergeSort(&front);
+        mergeSort(&back);
 
-    splitList(list, &a, &b);
-
-    Address pa = a;
-    Address pb = b;
-    while (pa != NULL){
-        new = merge(a,b);
-        displayList(new);
+        List mergesorted = merge(front, back);
+        *list = mergesorted;
     }
 }
 /* Fungsi untuk melakukan inisialisasi merge sort secara rekursif.

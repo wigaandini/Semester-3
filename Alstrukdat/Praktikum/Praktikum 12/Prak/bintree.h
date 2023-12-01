@@ -117,4 +117,22 @@ A
     E
 Note: Anda boleh membuat fungsi tambahan untuk membuat implementasi fungsi ini jika diperlukan
 */
+
+int hitungNode(BinTree root);
+// Menerima sebuah pohon biner
+// Mengembalikan jumlah minimum node yang perlu ditambahkan
+
+
+int hitungBebek(BinTree root, int n);
+
+// Menerima sebuah pohon biner
+
+// Mengembalikan penjumlahan dari hasil kali antara bebek-bebek pada rute 
+
+
+int hitungUang(BinTree root);
+
+// Menerima sebuah pohon biner yang menyatakan denah perumahan
+
+// Mengembalikan jumlah maksimum uang yang bisa dicuri Burbir
 #endif

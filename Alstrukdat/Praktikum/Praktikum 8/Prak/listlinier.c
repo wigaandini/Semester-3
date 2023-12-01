@@ -288,20 +288,16 @@ boolean fSearch(List L, Address P){
 
 Address searchPrec(List L, ElType X){
     Address p = L;
-    Address prev;
-
-    if(isEmpty(L) || length(L) == 1){
+    if (INFO(p) == X) {
         return NULL;
-    }
-
-    while (INFO(p) != X && p != NULL){
-        prev = p;
-        p = NEXT(p);
-    }
-    if (p != NULL){
-        return prev;
-    }
-    else{
+    } else {
+        while (NEXT(p) != NULL) {
+            if (INFO(NEXT(p)) == X) {
+                return p;
+            } else {
+                p = NEXT(p);
+            }
+        }
         return NULL;
     }
 }
@@ -363,57 +359,54 @@ Address adrMin(List l){
 /* Mengirimkan address P, dengan info(P) yang bernilai minimum */
 
 float average(List L){
-    float sum = 0;
-    Address p = FIRST(L);
-    while(NEXT(p) != NULL){
+    Address p = L;
+
+    int sum = 0;
+    int count = 0;
+    while (p != NULL) {
         sum += INFO(p);
+        count += 1;
+
+        p = NEXT(p);
     }
-    sum += INFO(p);
-    return (sum/(float)(length(L)));
+    if (!count) {
+        return 0;
+    }
+    else {
+        return sum / (float) count;
+    }
 }
 /* Mengirimkan nilai rata-rata info(P) */
 
 /***************** FUNGSI dan PROSEDUR TAMBAHAN **************/
 void deleteAll(List *l){
-    Address p = FIRST(*l);
     ElType val;
-    while(p != NULL){
+    while(!isEmpty(*l)) {
         deleteFirst(l, &val);
-        p = NEXT(p);
     }
-    *l = NULL;
 }
 /* Delete semua elemen list dan alamat elemen di-dealokasi */
 
 void copyList(List *l1, List *l2){
-    CreateList(l2);
-    FIRST(*l2) = FIRST(*l1);
+    *l2 = *l1;
 }
 /* I.S. L1 sembarang. F.S. L2=L1 */
 /* L1 dan L2 "menunjuk" kepada list yang sama.*/
 /* Tidak ada alokasi/dealokasi elemen */
 
 void inverseList(List *l){
-    if(!isEmpty(*l)){
-        int i, len = length(*l);
-        Address p = FIRST(*l), prev = NULL, last = NULL;
-        
-        while(NEXT(p) != NULL){
-            p = NEXT(p);
-        }
-        last = p;
-
-        while(p != FIRST(*l)){
-            prev = FIRST(*l);
-            while(NEXT(prev) != p){
-                prev = NEXT(prev);
-            }
+    List p = *l;
+    Address prev = NULL;
+    Address next = NULL;
+    if (length(*l) > 1) {
+        while (p != NULL) {
+            next = NEXT(p);
             NEXT(p) = prev;
-            p = prev;
-        }
 
-        NEXT(p) = NULL;
-        *l = last;
+            prev = p;
+            p = next;
+        }
+        *l = prev;
     }
 }
 /* I.S. sembarang. */

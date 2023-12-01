@@ -2,69 +2,71 @@
 #include <stdlib.h>
 #include "list_circular.h"
 
-int main(){
+int main() {
+    int n, temp, i, j, result = 1;
     List l;
-    int n, i;
-    Address p;
-
-    scanf("%d", &n);
     CreateList(&l);
-
-    for(i = 0; i < n; i++){
-        insertLast(&l, i+1);
+    scanf("%d", &n);
+    boolean b[n];
+    for (i = 0; i < n; i++) {
+        b[i] = true;
     }
+    for (i = 0; i < n-1; i++) {
+        scanf("%d", &temp);
+        insertLast(&l, temp);
+    }
+    for(i = 0; i < n - 1; i++) {
+        deleteFirst(&l, &temp);
 
-    int temp = 0;
-    int val, ai;
-    Address loc;
-    ElType del;
-    int length = n;
-    while(temp < n-1){
-        temp++; 
-        scanf("%d", &ai); 
-        loc = FIRST(l);
-        if(ai > 0){
-            val = ai;
-            while (val > 1){
-                loc = NEXT(loc);
-                val--;
+        if (temp > 0) {
+            for (j = 0; j < temp; j++) {
+                result++;
+                if (result > n) {
+                    result = 1;
+                }
+                while (!b[result-1]) {
+                    result++;
+                    if (result > n) {
+                        result = 1;
+                    }
+                }
             }
-            if(ai == 1){
-                deleteFirst(&l, &val);
+            result = result % n;
+            if (result == 0) {
+                result = n;
             }
-            else{
-                loc = NEXT(loc);
-                del = INFO(loc);
-                FIRST(l) = loc;
-                // printf("%d\n", del);
-                deleteFirst(&l,&val);
+            if (b[result-1]) {
+                b[result-1] = false;
             }
-            // displayList(l);
-            // printf("\n");
-            length --;
         }
-        else if (ai < 0){
-            val = length - (ai * (-1));
-            while(val > 1){
-                loc = NEXT(loc);
-                // while(NEXT(loc) != FIRST(l)){
-                //     loc = NEXT(loc);
-                // }
-                val --;
-            }
-            loc = NEXT(loc);
-            del = INFO(loc);
 
-            FIRST(l) = loc;
-            // printf("%d\n", del);
-            deleteFirst(&l, &val);
-            // displayList(l);
-            // printf("\n");
-            length --;
-    }
-        if(temp == n-1){
-            printf("%d\n", del);
+        else {
+            temp *= -1;
+            for (j = 0; j < temp; j++) {
+                result--;
+                if (result < 1) {
+                    result = n;
+                }
+                while (!b[result-1]) {
+                    result--;
+                    if (result < 1) {
+                        result = n;
+                    }                  
+                }
+            }
+            result = result % n;
+            if (result == 0) {
+                result = n;
+            }
+            if (b[result-1]) {
+                b[result-1] = false;
+            }
         }
     }
-    return 0;
+    for(j = 0; j < n; j++) {
+        if (b[j]) {
+            printf("%d\n", j+1);
+            break;
+        }
+    }
 }

@@ -34,8 +34,7 @@ boolean isEmpty(ListGanda l){
 /* Mengirim true jika list kosong */
 
 boolean isOneElement(ListGanda l){
-    Address p = CURRENT(l);
-    return(NEXT(p) == PREV(p));
+    return (!isEmpty(l) && NEXT(CURRENT(l)) == CURRENT(l));
 }
 /* Mengirim true jika list terdiri atas 1 elemen saja*/
 
@@ -46,49 +45,27 @@ int length(ListGanda l){
     }
     else{
         Address p = CURRENT(l);
-        while(NEXT(p) != PREV(p)){
-            count ++;
-        }
+        do {
+        count++;
+        p = NEXT(p);
+        } while (p != CURRENT(l));
+
         return count;
     }
 }
 /* Mengirimkan banyaknya elemen list; mengirimkan 0 jika list kosong */
 
 void rotate(ListGanda *l, int k){
-    Address p = CURRENT(*l);
-    if(isEmpty(*l)){
-        return NULL;
-    }
-    else{
-        if(k == 0){
-            CURRENT(*l) = p;
+    if (!isEmpty(*l)) {
+        int len = length(*l);
+        k %= len;
+
+        if (k < 0) {
+            k += len;
         }
-        else if(k > 0){
-            while(k != 0){
-                p = NEXT(p);
-                if(NEXT(p) == NULL){
-                    p = PREV(p);
-                    if(PREV(p) == NULL){
-                        p = NEXT(p);
-                    }
-                }
-                k --;
-            }
-            CURRENT(*l) = p;
-        }
-        else if(k < 0){
-            k *= (-1);
-            while(k != 0){
-                p = PREV(p);
-                if(PREV(p) == NULL){
-                    p = NEXT(p);
-                    if(NEXT(p) == NULL){
-                        p = PREV(p);
-                    }
-                }
-                k --;
-            }
-            CURRENT(*l) = p;
+
+        for (int i = 0; i < k; i++) {
+            CURRENT(*l) = NEXT(CURRENT(*l));
         }
     }
 }
@@ -98,15 +75,23 @@ void rotate(ListGanda *l, int k){
     dengan k positif artinya ke arah NEXT dan k negatif artinya ke arah PREV */
 
 void insertAfterCurrent(ListGanda *l, ElType x){
-    Address p, last;
-    p = newNode(x);
-    if (p != NULL) {
-        last = CURRENT(*l);
-        while (NEXT(last) != CURRENT(*l)) {
-            last = NEXT(last);
-        }
-        NEXT(last) = p;
-        NEXT(p) = CURRENT(*l);
+    Address newp = newNode(x);
+
+    if (isEmpty(*l)) {
+        CURRENT(*l) = newp;
+        NEXT(newp) = newp;
+        PREV(newp) = newp;
+    } else {
+        Address p = CURRENT(*l);
+        Address oldnext = NEXT(p);
+
+        NEXT(p) = newp;
+        NEXT(newp) = oldnext;
+
+        PREV(newp) = p;
+        PREV(oldnext) = newp;
+
+        CURRENT(*l) = newp;
     }
 }
 /* I.S. l terdefinisi, l mungkin kosong */
@@ -117,19 +102,24 @@ void insertAfterCurrent(ListGanda *l, ElType x){
  */
 
 void deleteCurrent(ListGanda *l, ElType *x){
-    Address p, last;
-    p = CURRENT(*l);
-    *x = INFO(p);
-    if (NEXT(CURRENT(*l)) == CURRENT(*l) && PREV(CURRENT(*l)) == CURRENT(*l)){
+    if (isOneElement(*l)) {
+        Address p = CURRENT(*l);
+        *x = INFO(p);
+
+        free(p);
         CURRENT(*l) = NULL;
-    }
-    else{
-        last = CURRENT(*l);
-        while (NEXT(last) != CURRENT(*l)){
-            last = NEXT(last);
-        }
-        CURRENT(*l) = NEXT(CURRENT(*l));
-        NEXT(last) = CURRENT(*l);
+    } 
+    else {
+        Address p = CURRENT(*l);
+        Address pnext = NEXT(p);
+        Address pprev = PREV(p);
+
+        *x = INFO(p);
+        NEXT(pprev) = pnext;
+        PREV(pnext) = pprev;
+
+        free(p);
+        CURRENT(*l) = pnext;
     }
 }
 /* I.S. l terdefinisi, l tidak kosong */

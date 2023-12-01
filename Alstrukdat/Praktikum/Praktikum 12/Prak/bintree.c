@@ -183,41 +183,90 @@ A
 Note: Anda boleh membuat fungsi tambahan untuk membuat implementasi fungsi ini jika diperlukan
 */
 
-/* other way to print */
-void recursivePrintTree(BinTree p, int h, int dep){
-/*FUNGSI TAMBAHAN*/
-/* I.S. p terdefinisi, h adalah jarak antara root dan node terdalam, dep adalah jarak antara root dan node yang sedang dicetak */
-/* F.S. Semua simpul p sudah dicetak secara preorder: akar, pohon kiri, dan pohon kanan. */
-    if(!isTreeEmpty(p)){
-        int i;
-        for(i = 0; i < h*dep; i++){
-            printf(" ");
+int hitungNode(BinTree root){
+    int count = 0;
+    if(isTreeEmpty(root)){
+        count += 0;
+    }
+    else if(isOneElmt(root)){
+        count += 0;
+    }
+    // else if(isBinary(root)){
+    //     count += 0;
+    //     hitungNode(RIGHT(root));
+    //     hitungNode(LEFT(root));
+    // }
+    else if(isUnerLeft(root)){
+        count += 1 + hitungNode(LEFT(root));
+    }
+    else if(isUnerRight(root)){
+        count += 1 + hitungNode(RIGHT(root));
+    }
+    else{
+        count += hitungNode(RIGHT(root)) + hitungNode(LEFT(root));
+    }
+    return count;
+}
+// Menerima sebuah pohon biner
+// Mengembalikan jumlah minimum node yang perlu ditambahkan
+
+
+int calculateRoute(BinTree node, int n) {
+    if (node == NULL) {
+        return 0;
+    }
+
+    if (isTreeEmpty(LEFT(node)) && isTreeEmpty(RIGHT(node))) {
+        // Leaf node
+        if (ROOT(node) == n) {
+            return ROOT(node) % 10000;
+        } else {
+            return 0;
         }
-        printf("%d\n", ROOT(p));
-        recursivePrintTree(LEFT(p), h, dep+1);
-        recursivePrintTree(RIGHT(p), h, dep+1);
+    }
+
+    int leftResult = calculateRoute(LEFT(node), n - ROOT(node));
+    int rightResult = calculateRoute(RIGHT(node), n - ROOT(node));
+
+    return (leftResult + rightResult) % 10000;
+}
+
+int hitungBebek(BinTree root, int n) {
+    return calculateRoute(root, n);
+}
+// Menerima sebuah pohon biner
+// Mengembalikan penjumlahan dari hasil kali antara bebek-bebek pada rute 
+
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+int calculateMaxMoney(BinTree node, int stealCurrent) {
+    if (node == NULL) {
+        return 0;
+    }
+
+    if (stealCurrent) {
+        // If stealing from the current house, skip adjacent houses
+        return ROOT(node) + calculateMaxMoney(LEFT(node), 0) + calculateMaxMoney(RIGHT(node), 0);
+    } else {
+        // If not stealing from the current house, consider both options for adjacent houses
+        int stealLeft = calculateMaxMoney(LEFT(node), 1) + calculateMaxMoney(RIGHT(node), 1);
+        int skipLeft = calculateMaxMoney(LEFT(node), 0) + calculateMaxMoney(RIGHT(node), 0);
+
+        return max(stealLeft, skipLeft);
     }
 }
 
-void printTree(BinTree p, int h)
-/* I.S. p terdefinisi, h adalah jarak indentasi (spasi) */
-/* F.S. Semua simpul p sudah ditulis dengan indentasi (spasi) */
-/* Penulisan akar selalu pada baris baru (diakhiri newline) */
-/* Contoh, jika h = 2: 
-1) Pohon preorder: (A()()) akan ditulis sbb:
-A
-2) Pohon preorder: (A(B()())(C()())) akan ditulis sbb:
-A
-  B
-  C
-3) Pohon preorder: (A(B(D()())())(C()(E()()))) akan ditulis sbb:
-A
-  B
-    D
-  C
-    E
-Note: Anda boleh membuat fungsi tambahan untuk membuat implementasi fungsi ini jika diperlukan
-*/
-{
-    recursivePrintTree(p, h, 0);
+int hitungUang(BinTree root) {
+    // Start with considering both options for the root node
+    int stealRoot = calculateMaxMoney(root, 1);
+    int skipRoot = calculateMaxMoney(root, 0);
+
+    // Return the maximum amount of money that can be stolen
+    return max(stealRoot, skipRoot);
 }
+// Menerima sebuah pohon biner yang menyatakan denah perumahan
+
+// Mengembalikan jumlah maksimum uang yang bisa dicuri Burbir

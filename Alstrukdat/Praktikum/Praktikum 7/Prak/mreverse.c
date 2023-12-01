@@ -1,40 +1,29 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "boolean.h"
 #include "queue.h"
+#include <stdio.h>
 
-int main(){
-    int n, k;
-    ElType val;
+int main() {
+    Queue q;
+    CreateQueue(&q);
+
+    int n, k, val, i;
     scanf("%d", &n);
     scanf("%d", &k);
 
-    int i=0, j;
-    Queue q, temp, new;
-    CreateQueue(&q);
-    CreateQueue(&temp);
-    CreateQueue(&new);
-
-    while(!isFull(q) && i < n){
+    while (n > 0) {
         scanf("%d", &val);
         enqueue(&q, val);
-        i++;
+        n--;
     }
 
-    for(j = 0; j < k; j++){
-        dequeue(&q, &val);
-        enqueue(&temp, val);
+    int temp[k];
+    for (i = 0; i < k; i++) {
+        temp[i] = q.buffer[i];  
     }
 
-    for(j = k; j >= 0; j--){
-        enqueue(&new, temp.buffer[j]);
-    } 
-
-    while(!isFull(new) && !isEmpty(q)){
-        dequeue(&q, &val);
-        enqueue(&new, val);
+    for (i = 0; i < k; i++) {
+        q.buffer[i] = temp[k - i - 1];
     }
 
-    dequeue(&new, &val);
-    displayQueue(new);
+    displayQueue(q);
+    return 0;
 }
