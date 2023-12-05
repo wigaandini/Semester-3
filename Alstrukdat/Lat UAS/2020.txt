@@ -1,0 +1,260 @@
+Erdianti Wiga P 
+13522053
+
+
+************************ UAS 2020 ****************************
+********************** LIST REKURSIF *************************
+function IsMultiplied (input L1, L2: List, input N: integer) → boolean
+{ I.S. List L1, L2 terdefinisi, memiliki jumlah elemen yang sama dan mungkin kosong. N terdefinisi.
+F.S. Mengembalikan nilai true jika semua elemen L1 dikalikan dengan N, hasilnya akan sama dengan L2, 
+dan mengembalikan false jika tidak. Contoh: L1 = 2->1->4, L2 = 6->3->12 dan N = 3, 
+akan mengambalikan nilai true. Untuk kasus list kosong, akan mengembalikan true.}
+    KAMUS LOKAL
+    p1, p2 : Address
+
+    ALGORITMA
+    if (isEmpty(l1) and isEmpty(l2)) then
+        -> true
+    else 
+        p1 <- l1
+        p2 <- l2
+        if (Info(p1) * N != Info(p2)) then
+            -> false
+        else 
+            -> IsMultiplied(Next(p1), Next(p2), N)
+
+
+procedure PrintAlternate (input L: List, input isOdd: boolean)
+{ I.S. List L terdefinisi dan mungkin kosong, isOdd terdefinisi.
+F.S. Setiap elemen urutan ganjil dari list L tercetak jika isOdd bernilai true, atau
+elemen urutan genap akan tercetak jika isOdd bernilai false. Sebagai contoh, jika 
+list L berisi nilai (2,4,3,2,8) dan isOdd = true, maka yang tercetak adalah 2, 3 
+dan 8. Begitu pula sebaliknya, jika isOdd = false, yang tercetak adalah 4 dan 2.}
+    KAMUS LOKAL
+    p : Address
+
+    ALGORITMA
+    if (isEmpty(l)) then
+        output(NULL)
+    else
+        p <- l
+        if (isOdd) then
+            output(Info(p))
+        else 
+            if(Next(p) != NULL)
+                output(Info(Next(p)))
+
+        if (Next(p) != NULL) then
+            PrintAlternate(Info(Next(Next(p))), isOdd)
+
+
+procedure DeleteKth (input/output L: List, input K: integer) 
+{ I.S. L terdefinisi dan mungkin kosong. K berupa integer dengan rentang nilai 1 hingga 
+ banyaknya elemen dari list L untuk L tidak kosong, dan K bisa terdefinisi 
+ sembarang jika L kosong.
+ F.S. Elemen ke-K dari list L terhapus list L.}
+    KAMUS LOKAL
+    p : Address
+
+    ALGORITMA
+    if (isEmpty(l)) then
+        output(NULL)
+    else
+        p <- l
+        if (K = 1) then
+            l <- Next(p)
+        else
+            DeleteKth(Next(p), K-1)
+
+
+
+
+********************** POHON BINER *************************
+function SearchLessThen(P: BinTree, X: integer) → boolean
+{ Mengirimkan true jika ada Value pada pohon P yang nilainya kurang dari X; false jika 
+ tidak ada}
+   KAMUS LOKAL
+   ALGORITMA
+   if (isTreeEmpty(P)) then
+      -> false
+   else
+      if (Value(P) < X) then
+         -> true
+      else 
+         if (isUnerLeft(P)) then
+            -> SearchLessThen(Left(P), X)
+         else if (isUnerRight(P)) then
+            -> SearchLessThen(Right(P), X)
+         else
+            -> (SearchLessThen(Right(P), X) or SearchLessThen(Left(P), X))
+
+
+function SumAllValue(P: BinTree) → integer
+{ Mengirimkan jumlah total seluruh Value pada pohon P; jika Count(pt) > 1 maka dihitung 
+ sebesar Value(pt) dikali Count(pt) }
+   KAMUS LOKAL
+   result : integer
+
+   ALGORITMA
+   result <- 0
+   if (isTreeEmpty(P)) then
+      -> (result + 0)
+   else if (isOneElmt(P)) then
+      -> (result + (Value(P) * Count(P)))
+   else
+      if (isUnerLeft(P)) then
+         -> (result + SumAllValue(Left(P)))
+      else if (isUnerRight(P)) then
+         -> (result + SumAllValue(Right(P)))
+      else
+         -> (result + SumAllValue(Right(P)) + SumAllValue(Left(P)))
+
+
+function MaxOccurence(P: BinTree) → infotype
+{ Mengirimkan alamat node pada pohon P yang Value-nya muncul paling banyak (Count-nya 
+ terbanyak); jika ada lebih dari satu node yang dengan Count tertinggi, kirimkan 
+alamat node dengan Value tertingi; pohon tidak kosong }
+   KAMUS LOKAL
+   max : infotype
+   
+   ALGORITMA
+   max.Value <- P->.Info.Value
+   max.Count <- P->.Info.Count
+
+   if (isOneElmt(P)) then
+      -> max
+   else     
+      if (Left(P) != NULL and Count(Left(P)) > Count(max)) then
+         -> MaxOccurence(Left(P))
+      else if (Left(P) != NULL and Count(Left(P)) = Count(max) and Value(Left(P)) > Value(max)) then
+         -> Left(P)->.Info
+      
+      if (Right(P) != NULL and Count(Right(P)) > Count(max)) then
+         -> MaxOccurence(Right(P))
+      else if (Right(P) != NULL and Count(Right(P)) = Count(max) and Value(Right(P)) > Value(max)) then
+         -> Right(P)->.Info
+
+
+
+
+************************ GRAF ****************************
+function SearchEdge(G: Graph, s, t: integer) → addrEdge
+{ Mengembalikan address edge yang menyimpan info edge dari 
+ node ber-id s ke node ber-id t jika sudah ada pada Graph G, 
+ Nil jika belum. Perhatikan: s & t adalah id Node, bukan 
+ address Node. }
+    KAMUS LOKAL
+    p : Edge
+
+    ALGORITMA
+    p <- G->.FirstEdge
+    while (p != NULL) do
+        if ((p->.Source.Id = s) and p->.Target.Id = t) then
+            -> p 
+        p <- p->.Next
+    -> NULL
+
+
+procedure InsertEdge(input/output G: Graph, input s, t: integer)
+{ Menambahkan edge dari s menuju t ke dalam G }
+{ I.S. G, s, dan t terdefinisi. }
+{ F.S. Jika belum ada edge (s,t) di G, maka tambahkan edge
+ (s,t) ke G. Jika node s atau t belum ada pada G, 
+ tambahkan node tersebut dahulu. Jika sudah ada edge 
+ (s,t) di G, maka G tetap. Perhatikan: s & t adalah id 
+ Node, bukan address Node. }
+    KAMUS LOKAL
+    sourceNode, targetNode : Node
+    newEdge : Edge
+
+    ALGORITMA
+    sourceNode <- SearchNode(G, s)
+    targetNode <- SearchNode(G, t)
+
+    if (sourceNode = NULL) then
+        InsertNode(G, s, sourceNode)
+    if (targetNode = NULL) then
+        InsertNode(G, t, targetNode)
+
+    if (SearchEdge(G, s, t) = NULL) then
+        newEdge->.Next <- G->.FirstEdge
+        G->.FirstEdge <- newEdge
+
+
+function CountInboundEdges(G: Graph, X: integer) → integer
+{ Mengembalikan jumlah edge yang menuju node ber-id X. }
+    KAMUS LOKAL
+    count : integer
+    current : Edge
+
+    ALGORITMA
+    current <- G->.FirstEdge
+    while (current != NULL) do 
+        if (current->.Target.Id = X) then
+            count <- count + 1
+        current <- current->.Next
+    -> count
+
+
+
+
+********************* STUDI KASUS ************************
+procedure AddTracing(input FirstPasien: ListPasien,
+                    input/output FirstKontak: ListKontak,
+                    input/output FirstTracing: ListTracing
+                    input PP: AdrPasien, input PK: AdrKontak)
+{ Menambah tracing baru yg menyatakan adanya kontak antar pasien PP dengan kontak PK.
+I.S. PP dan PK masing-masing ada di ListPasien dan ListKontak, 
+    PP bukan orang yang sama dengan PK
+F.S. Jika alokasi berhasil, sebuah tracing baru yang menyatakan adanya kontak
+    antara PP dan PR ditambahkan; jumlah kontak pasien covid PK disesuaikan. Jika
+    alokasi tidak berhasil, tidak ada perubahan pada list tracing.}
+    KAMUS LOKAL
+    newTracing : AdrTracing
+
+    ALGORITMA
+    newTracing <- AlokasiTracing(PP, PK)
+    if (newTracing != NULL) then
+        newTracing->.NextTracing <- FirstTracing
+        FirstTracing <- newTracing
+    PK->.JumlahKontakPasienCovid <- PK->.JumlahKontakPasienCovid + 1
+
+
+function Epidemic (FirstPasien: ListPasien, FirstKontak: ListKontak,
+                FirstTracing: ListTracing, Ps: string) → real
+{ Menghitung berapa jumlah kontak yang pernah ditemui seorang pasien bernama Ps,
+dibandingkan dengan total jumlah kontak di kota Asgard. Ps ada pada list Pasien.
+Misalkan jumlah kontak yang pernah ditemui Ps 5, total jumlah di kota Asgard 36,
+sehingga nilai yang dikirimkan adalah 5/36 atau 0.14. }
+    KAMUS LOKAL
+    jumlahKontakPs, totalKontakAsgard : integer
+    currTracing : AdrTracing
+
+    ALGORITMA
+    jumlahKontakPs <- 0
+    totalKontakAsgard <- 0
+    currTracing <- FirstTracing
+    while (currTracing != NULL) do
+        if (Ps = currTracing->.PPasien.Nama) then
+            jumlahKontakPs <- jumlahKontakPs + 1
+        totalKontakAsgard <- totalKontakAsgard +1
+        currTracing <- currTracing->.NextTracing
+    if (totalKontakAsgard > 0) then
+        -> jumlahKontakPs / totalKontakAsgard
+    else
+        -> 0
+
+
+function IsCommon(FirstPasien: ListPasien, FirstKontak: ListKontak,
+                FirstTracing: ListTracing, P1: string, P2: string) → boolean
+{ Mencari tahu apakah pasien bernama P1 dan P2 memiliki minimal 1 kontak yang sama. }
+    KAMUS LOKAL
+    currTracing : AdrTracing
+
+    ALGORITMA
+    currTracing <- FirstTracing
+    while (currTracing != NULL) do
+        if ((currTracing.PPasien.Nama = P1 and currTracing.PKontak.Nama = P2) or (currTracing.PPasien.Nama = P2 and currTracing.PKontak.Nama = P1)) then
+            -> true
+        currTracing <- currTracing->.NextTracing
+    -> false

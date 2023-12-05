@@ -1,0 +1,232 @@
+Erdianti Wiga P 
+13522053
+
+
+************************ UAS 2021 ****************************
+********************** LIST REKURSIF *************************
+function isKelipatanX(L: List, x: integer) -> boolean
+    KAMUS LOKAL
+    p : Address
+
+    ALGORITMA
+    p <- l
+    if (isOneElmt(L) and Info(p) mod x = 0) then
+        -> true
+    else 
+        -> isKelipatanX(Next(p), x)
+
+
+function sortedMerge(L1, L2: List) -> List
+    KAMUS LOKAL
+    p1, p2, res : Address
+
+    ALGORITMA
+    p1 <- L1
+    p2 <- L2
+    if (isEmpty(L1)) then
+        -> L2
+    else if (isEmpty(L2)) then
+        -> L1
+    else 
+        if (Info(p1) <= Info(p2)) then
+            res <- newNode(Info(p1))
+            Next(res) <- Next(p1)
+        else
+            res <- newNode(Info(p2))
+            Next(res) <- Next(p2)
+        -> sortedMerge(Next(p1), Next(p2))
+
+        
+procedure deleteAlternate(input/output L: List, input isOdd: boolean)
+    KAMUS LOKAL
+    p : Address
+
+    ALGORITMA
+    p <- L
+    if (isOdd) then
+        if (isOneElmt(L)) then
+            L <- NULL
+        else 
+            p <- Next(p)
+    else
+        Next(p) <- Next(Next(p))
+    if (Next(p) != NULL) then
+        deleteAlternate(Next(Next(p)), isOdd)
+
+
+
+********************** POHON BINER *************************
+funtion sumAllWeight(p: BinTree) -> integer
+    KAMUS LOKAL
+    res : integer
+
+    ALGORITMA
+    res <- 0
+    if (isTreeEmpty(p)) then
+        -> 0
+    else if (isOneElmt(p)) then 
+        -> res + (Weight(p) * Count(p))
+    else
+        depend on (p)
+            isUnerLeft(p) : -> (res + sumAllWeight(Left(p)))
+            isUnerRight(p) : -> (res + sumAllWeight(Right(p)))
+            isBiner(p) : -> (res + sumAllWeight(Left(p)) + sumAllWeight(Right(p)))
+
+function maxOccurence(p: BinTree) -> BinTree
+    KAMUS LOKAL
+    max : infotype
+
+    ALGORITMA
+    if (isTreeEmpty(p)) then
+        -> NULL
+    else if (isOneElmt(p)) then
+        -> p 
+    else
+        if (Left(p) != NULL and Count(Left(p)) > Count(max)) then
+            -> maxOccurence(Left(p))
+        else if (Left(p) != NULL and Count(Left(p)) = Count(max) and Weight(Left(p)) > Weight(max)) then
+            -> Left(p)
+        if (Right(p) != NULL and Count(Right(p)) > Count(max)) then
+            -> maxOccurence(Right(p))
+        else if (Right(p) != NULL and Count(Right(p)) = Count(max) and Weight(Right(p)) > Weight(max)) then
+            -> Right(p)
+
+
+
+********************** GRAF *************************
+procedure tambahTeman(input/output g: Graph, input siA, siB: string)
+    KAMUS LOKAL
+    searchA, searchB: adrOrang
+
+    ALGORITMA
+    searchA <- cariOrang(g, siA)
+    searchB <- cariOrang(g, siB)
+
+    if (searchA = NULL) then
+        tambahOrang(g, siA, searchA)
+    if (searchB = NULL) then
+        tambahOrang(g, siB, searchB)
+    
+    found <- false
+    while (searchA->.Teman != NULL and not found) do
+        if (searchA->.Teman = searchB) then
+            found <- true 
+    if (not found) then
+        searchA->.Teman <- searchB
+        searchB->.Teman <- searchA
+
+
+function palingGaul(g: Graph) -> string
+    KAMUS LOKAL
+    currOrang : adrOrang
+    count, max : integer
+
+    ALGORITMA
+    currOrang <- g.First
+    max <- 0
+    while (currOrang != NULL) do    
+    count <- 0
+        while (currOrang->.Teman != NULL) do
+            count <- count + 1
+            currOrang->.Teman <- currOrang->.Teman.Next
+        currOrang <- currOrang->.Next
+        if (count > max) then
+            max <- count
+    if (max > 0) then
+        -> currOrang->.Nama
+        
+
+function apakahBerteman(g: Graph, siX: string) -> boolean  
+    KAMUS LOKAL
+    searchX : adrOrang
+    found : boolean
+
+    ALGORITMA
+    searchX <- cariOrang(g, siX)
+
+    if (searchX = NULL) then
+        -> false
+    else
+        while (searchX->.Teman != NULL and not found) do
+            if (searchX->.Teman.Nama = palingGaul(g)) then
+                found <- true
+            else
+                searchX->.Teman <- searchX->.Teman.Next
+        if (found) then
+            -> true
+        else
+            -> false
+
+
+
+
+
+********************* STUDI KASUS ************************
+function portofolio (FirstMgr: ListMgr, FirstFC: ListFC, 
+                    FirstContract: ListContract, Mgr: string) -> real
+    KAMUS LOKAL
+    fc : AdrFC
+    cont : AdrCt 
+    manager : AdrMgr
+    countFC, countCt : integer
+    found : boolean 
+
+    ALGORITMA
+    manager <- FirstMgr
+    found <- false
+    while (manager != NULL and not found) do
+        if (manager->.Nama = Mgr) then
+            found <- true
+        else
+            manager <- manager->.NextMgr
+    
+    if (found) then
+        fc <- FirstFC
+        countFC <- 0 
+        while (fc != NULL) do
+            countFC <- countFC + 1
+            fc <- fc->.NextFC
+        
+        cont <- FirstContract
+        countCt <- 0
+        while (cont != NULL) then
+            if (cont->.PMgr.Nama = Mgr) then
+                countCt <- countCt + 1
+            cont <- cont->.NextContract
+
+        -> countCt/countFC
+
+    else
+        -> 0
+
+
+
+function isAlumni (FirstMgr: ListMgr, FirstFC: ListFC, 
+                FirstContract: ListContract, M1: string, M2: string) -> boolean
+    KAMUS LOKAL
+
+    ALGORITMA
+    manager : AdrMgr
+    found1, found2 : boolean
+    cont : AdrCt
+    fc : AdrFC
+    cont : AdrCt
+
+    ALGORITMA
+    manager <- FirstMgr
+    found <- false
+    while (manager != NULL and not found1 and not found2) do
+        if (manager->.Nama = M1) then
+            found1 <- true
+        else if (manager->.Nama = M2) then
+            found2 <- true
+        else
+            manager <- manager->.NextMgr
+    if ((found1 and not found2) or (found2 and not found1)) then
+        -> false
+    else 
+        fc <- FirstFC
+        cont <- FirstContract
+        while (cont != NULL) then
+            if (cont->.manager->.Nama = M1) then
+

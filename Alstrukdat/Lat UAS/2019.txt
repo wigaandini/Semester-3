@@ -1,0 +1,61 @@
+Erdianti Wiga P 
+13522053
+
+
+************************ UAS 2019 ****************************
+********************** LIST REKURSIF *************************
+function IsL1AboveL2(l1, l2: List) -> boolean
+    KAMUS LOKAL
+    p1, p2 : address
+
+    ALGORITMA
+    if (isEmpty(l1) and isEmpty(l2)) then
+        -> false
+    else if (isEmpty(l1) or isEmpty(l2)) then
+        -> false
+    else
+        p1 <- l1
+        p2 <- l2
+        -> (Info(p1) > Info(p2) and IsL1AboveL2(Next(p1), Next(p2)))
+
+
+procedure DelAboveX(input/output l: List, input x: infotype)
+    KAMUS LOKAL
+    p, temp : address
+
+    ALGORITMA
+    if (isEmpty(l)) then
+        l <- NULL
+    else
+        p <- l 
+        if (Info(p) > x) then
+            temp <- p 
+            p <- Next(p)
+            dealokasi(temp)
+            DelAboveX(p, x)
+        else
+            DelAboveX(Next(p), x)
+
+
+procedure MinMax(input l: List, output min, max: integer)
+    KAMUS LOKAL
+    p : address
+
+    ALGORITMA
+    p <- l
+    if (isOneElmt(l)) then
+        min <- Info(p)
+        max <- Info(p)
+    else
+        MinMax(Next(p), min, max)
+        if (Info(p) < min) then
+            min <- Info(p)
+        if (Info(p) > max) then
+            max <- Info(p)
+
+
+
+
+************************ POHON BINER ****************************
+************************* STUDI KASUS *************************
+// dah capek bye //

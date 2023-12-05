@@ -1,0 +1,157 @@
+Erdianti Wiga P 
+13522053
+
+
+************************ UAS 2016 ****************************
+********************** LIST REKURSIF *************************
+function sumGenap(l: List) -> integer
+    KAMUS LOKAL
+    p : address
+
+    ALGORITMA
+    if (isEmpty(l)) then
+        -> 0
+    else
+        p <- First(l)
+        if (Info(p) mod 2 = 0) then
+            -> Info(p) + (sumGenap(Next(p)))
+        else
+            -> sumGenap(Next(p)) 
+
+
+function isOrdered(L: List) -> boolean
+    KAMUS LOKAL
+    p : address
+
+    ALGORITMA
+    if (isOneElmt(l)) then
+        -> true
+    else
+        p <- First(l)
+        -> (Info(p) <= Info(Next(p)) and isOrdered(Next(p)))
+
+
+procedure delAllMulOfX(input/output l: List, input x: integer)
+    KAMUS LOKAL
+    p, temp : address
+
+    ALGORITMA
+    p <- First(l)
+    if (isEmpty(l)) then
+        l <- NULL
+    else
+        if (Info(p) mod x = 0) then
+            temp <- p 
+            p <- Next(p)
+            dealokasi(temp)
+            delAllMulOfX(p, x)
+        else
+            delAllMulOfX(Next(p), x)
+
+
+
+
+************************ POHON BINER ****************************
+procedure BuildTreeFromString(input str: string, input/output idx: integer, output p: BinTree)
+    KAMUS LOKAL
+    ALGORITMA
+    if (str[idx] = "\0") then
+        p <- NULL
+    else
+        if (str[idx] >= '0' and str[idx] <= '9') then
+            p <- Alokasi(str[idx])
+        else
+            p <- Alokasi(str[idx])
+            idx <- idx + 1
+            BuildTreeFromString(str, idx, Left(p))
+            idx <- idx + 1
+            BuildTreeFromString(str, idx, Right(p))
+
+
+function EvalEkspresi(p: BinTree) -> integer
+    KAMUS LOKAL
+    opr1, opr2 : integer
+
+    ALGORITMA
+    if (p != NULL) then
+        if (isOperator(Akar(p))) then
+            opr1 <- EvalEkspresi(Left(p))
+            opr2 <- EvalEkspresi(Right(p))
+            -> Operasi(opr1, opr2, Akar(p))
+        else
+            -> CtoI(Akar(p))
+    else
+        -> 0
+
+
+procedure TampilkanEkspresi(input p: BinTree)
+    KAMUS LOKAL
+    ALGORITMA
+    if (p != NULL) then
+        output(Akar(p))
+        TampilkanEkspresi(Left(p))
+        TampilkanEkspresi(Right(p))
+
+
+
+
+************************* GRAF *************************
+procedure CreateGraph(input x: string, output l: Graph)
+    KAMUS LOKAL
+    newNode : adrNode
+
+    ALGORITMA
+    newNode <- AlokNode(x)
+    First(l) <- newNode
+
+
+procedure InsertFriendShip(input/output g: Graph, input personA, personB: string)
+    KAMUS LOKAL
+    searchA, searchB : adrNode
+    friendA, friendB : adrFriendNode
+
+    ALGORITMA
+    searchA <- SearchPerson(g, personA)
+    searchB <- SearchPerson(g, personB)
+
+    if (searchA = NULL) then
+        InsertPerson(g, personA, searchA)
+    if (searchB = NULL) then
+        InsertPerson(g, personB, searchB)
+
+    if (not isFriend(personA, personB, g)) then
+        friendA <- AlokFriendNode(searchB)
+        friendB <- AlokFriendNode(searchA)
+        if (friendA != NULL) then
+            friendA->.Next <- searchA->.Trail
+            searchA->.Trail <- friendA
+        if (friendB != NULL) then
+            friendB->.Next <- searchB->.Trail
+            searchB->.Trail <- friendB
+
+
+function isFriend(personA, personB: string, g: Graph) -> boolean
+    KAMUS LOKAL
+    found : boolean
+    searchA, searchB : adrNode
+
+    ALGORITMA
+    searchA <- SearchPerson(g, personA)
+    searchB <- SearchPerson(g, personB)
+    
+    if (searchA = NULL or searchB = NULL) then
+        -> false
+    else
+        found <- false
+        while (searchA->.Trail != NULL and not found) do
+            if (searchA->.Trail->.Friend = searchB) then
+                found <- true 
+            else
+                searchA->.Trail <- searchA->.Trail->.Next
+        -> found
+
+
+
+************************* STUDI KASUS *************************
+procedure initBoard
+// GATAU UDH CAPEK MIKIR BYE //
