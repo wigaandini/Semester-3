@@ -9,23 +9,21 @@
 
 void splitList(List source, List* front, List* back){
     int len = length(source);
-    int frontPart;
-    if(len % 2 == 0){
-        frontPart = len / 2;
-    }
-    else{
-        frontPart = ((len / 2) - 1);
+    int half = (len - 1) / 2;
+
+    CreateList(front);
+    CreateList(back);
+    if(len == 0) return;
+
+    Address ad = source;
+    for(int i = 0; i <= half; ++i){
+        insertLast(front, INFO(ad));
+        ad = NEXT(ad);
     }
 
-    List p = source;
-    int i;
-    for (i = 0; i < len; i++) {
-        if (i <= frontPart) {
-            insertLast(front, INFO(p));
-        } else {
-            insertLast(back, INFO(p));
-        }
-        p = NEXT(p);
+    for(int i = half + 1; i < len; ++i){
+        insertLast(back, INFO(ad));
+        ad = NEXT(ad);
     }
 }
 /* Fungsi untuk memecah sebuah list dengan head source menjadi dua buah 
@@ -39,38 +37,29 @@ List merge(List a, List b){
     List result;
     CreateList(&result);
 
-    if (a == NULL){
-        return b;
-    } 
-    else if (b == NULL){
-        return a;
-    } 
-    else {
-        List temp1 = a;
-        List temp2 = b;
-        ElType val;
-
-        while ((temp1 != NULL) && (temp2 != NULL)) {
-            if (INFO(temp1) <= INFO(temp2)) 
-                deleteFirst(&temp1, &val);
-            else 
-                deleteFirst(&temp2, &val);
-            
-            insertLast(&result, val);
+    Address l1 = a;
+    Address l2 = b;
+    while(l1 != NULL && l2 != NULL){
+        if(INFO(l1) < INFO(l2)){
+            insertLast(&result, INFO(l1));
+            l1 = NEXT(l1);
+        } else {
+            insertLast(&result, INFO(l2));
+            l2 = NEXT(l2);
         }
-
-        while (temp1 != NULL) {
-            deleteFirst(&temp1, &val);
-            insertLast(&result, val);
-        }
-
-        while (temp2 != NULL) {
-            deleteFirst(&temp2, &val);
-            insertLast(&result, val);
-        }
-
-        return result;
     }
+
+    while(l1 != NULL){
+        insertLast(&result, INFO(l1));
+        l1 = NEXT(l1);
+    }
+
+    while(l2 != NULL){
+        insertLast(&result, INFO(l2));
+        l2 = NEXT(l2);
+    }
+
+    return result;
 }
 /* Fungsi untuk melakukan merge sort list a dan b secara rekursif.
    Sort dilakukan secara ascending berdasarkan nilai elemen.
@@ -81,21 +70,24 @@ List merge(List a, List b){
 */
 
 void mergeSort(List* list){
-    displayList(*list); 
-    printf("\n");
-    if (length(*list) > 1) {
-        List front; 
-        List back; 
-        CreateList(&front);
-        CreateList(&back);
-
-        splitList(*list, &front, &back);
-        mergeSort(&front);
-        mergeSort(&back);
-
-        List mergesorted = merge(front, back);
-        *list = mergesorted;
+    List front;
+    List back;
+    if((*list) == NULL) return;
+    if((*list)->next == NULL){
+        displayList(*list);
+        printf("\n");
+        return;
     }
+    
+    splitList(*list, &front, &back);
+
+    displayList(*list);
+    printf("\n");
+
+    mergeSort(&front);
+    mergeSort(&back);
+
+    *list = merge(front, back);
 }
 /* Fungsi untuk melakukan inisialisasi merge sort secara rekursif.
    Setiap kali fungsi dipanggil, maka tampilkan list yang sekarang
