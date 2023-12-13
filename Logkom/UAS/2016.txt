@@ -38,11 +38,9 @@ NO 6
 a) X = charles? 
    yes.
 b) Y = elizabeth ? ;
-   Y = charles ? ;
-   Y = william ? ;
-   Y = harry
+   Y = charles ? 
    yes.
-c) yes.
+c) no.
 
 
 NO 7

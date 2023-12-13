@@ -29,3 +29,22 @@ predikat2([], []).
 predikat2([H | T], R) :-
     predikat2(T, T1),
     append(T1, [H], R).
+/* NO 5
+a) i. yes.
+   ii. yes.
+   iii. no.
+   iv. no.
+   v. yes
+b) dia predikat2 tuh buat reverse listnya trus predikat 1 buat
+   cek apakah listnya sama dengan list yang di reverse
+*/
+
+
+/* NO 6 
+a) benar
+b) salah, harusnya yang bikin aturan banyak tuh OR
+c) salah, green buat efisiensi, red bisa ubah arti program
+d) salah, dia harus ada knowledge base sama UI
+e) salah, dia cuma handle backtrack, ya bisa dipake buat if else
+   tapi bukan itu fungsi aslinya
+*/

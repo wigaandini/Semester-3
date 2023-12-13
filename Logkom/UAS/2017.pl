@@ -10,6 +10,8 @@ big_mac(c).
 big_kahuna_burger(b).
 whopper(d). 
 
+
+
 is_a_horse(Comet).
 is_a_horse(Dasher).
 is_a_horse(Prancer).
@@ -23,3 +25,13 @@ is_fast(Prancer).
 is_fast(Thunder).
 
 valuable(X) :- is_a_horse(X), is_parent_of(Parent, Child), is_fast(Child).
+
+
+/* NO 6
+a) benar
+b) salah, harusnya OR
+c) salah, green buat efisiensi, red bisa ubah arti program
+d) salah, yang bisa rekursif itu rule
+e) salah, dia cuma handle backtrack, ya bisa dipake buat if else
+   tapi bukan itu fungsi aslinya
+*/
