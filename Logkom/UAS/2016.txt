@@ -1,0 +1,60 @@
+NO 1
+pokonya akhirnya jadi
+{p(x,f(x)), ~q(a,z)}
+{r(f(x)), ~q(a,z)}
+
+
+NO 2
+a) Res : {w <- r(z,z), x <- t(r(z,z), z), y <- v}
+b) Res : {r <- g(u,v), w <- t, x <- t, y <- t}
+
+
+NO 3 (gayakin)
+a) bener
+b) salah
+
+
+NO 4
+bisa pokony mls pap
+
+
+NO 5
+main :-
+    open('mahasiswa.txt', read, Str),
+    read_file(Str,Lines),
+    close(Str),
+    write(Lines), nl.
+
+read_file(Stream,[]) :-
+    at_end_of_stream(Stream).
+
+read_file(Stream,[X|L]) :-  
+    \+ at_end_of_stream(Stream),
+    read(Stream,X),
+    read_file(Stream,L).
+
+
+NO 6
+a) X = charles? 
+   yes.
+b) Y = elizabeth ? ;
+   Y = charles ? ;
+   Y = william ? ;
+   Y = harry
+   yes.
+c) yes.
+
+
+NO 7
+a) 1 tuh programnya as facts, 2 programnya as predikat soalnya dia ada bandingin N
+b) i) X = 2
+   ii) X = 2
+c) i) yes.
+   ii) no.
+
+
+NO 8
+a) Y = pandu ? ;
+   Y = arini ? 
+   yes.
+b) harusnya ditambahin di rulesnya X \== Y biar arini nya ga kedetect juga
